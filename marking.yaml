@@ -1,0 +1,7 @@
+path: D:\marking\data
+train: 'train/images'
+val: 'valid/images'
+
+# class names
+names:
+  0: 'mark'
