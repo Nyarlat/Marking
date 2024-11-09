@@ -28,7 +28,7 @@ class Retriever:
 
     @staticmethod
     def _get_all_articles_sqlite():
-        conn = sqlite3.connect("../data/rosatom.db")
+        conn = sqlite3.connect("app/data/rosatom.db")
         cursor = conn.cursor()
         query = f"SELECT ДетальАртикул FROM components"
         cursor.execute(query)
