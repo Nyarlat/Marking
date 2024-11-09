@@ -1,5 +1,4 @@
 from ocr import detect_and_read
-from ocr2 import detect_and_read2
 import os
 
 def read_true_text(bbox_file_path):
@@ -17,13 +16,11 @@ def process_images(image_folder, bbox_folder):
 
             print(f"\nProcessing image: {filename}")
             detected_text_easyocr = detect_and_read(image_path)
-            detected_text_tesseract = detect_and_read2(image_path)
 
             if os.path.exists(bbox_file_path):
                 true_text = read_true_text(bbox_file_path)
                 print(f"True text from file: {true_text}")
                 print(f"Easyocr detected text: {detected_text_easyocr}")
-                print(f"Tesseract detected text: {detected_text_tesseract}")
 
 
 if __name__ == '__main__':
