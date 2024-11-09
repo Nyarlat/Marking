@@ -1,5 +1,7 @@
 import cv2
 import pytesseract
+import imutils
+from pytesseract import Output
 from ultralytics import YOLO
 
 # Load the YOLO model
@@ -19,16 +21,23 @@ def detect_and_read2(image_path):
             x1, y1, x2, y2 = map(int, bbox)  # Convert to integer
             # Crop the image to the bounding box area
             cropped_img = img[y1:y2, x1:x2]
+
             pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+            osd_image = pytesseract.image_to_osd(cropped_img, output_type=Output.DICT)
+            rotated_image = imutils.rotate(cropped_img, angle=osd_image["rotate"])
+
             # Use Tesseract to read text from the cropped image
-            text = pytesseract.image_to_string(cropped_img)
+            # text = pytesseract.image_to_string(rotated_image, config='--psm 0 -c min_characters_to_try=5')
+            text = pytesseract.image_to_string(rotated_image, config='--dpi 300')
+            # text = pytesseract.image_to_string(rotated_image)
 
             # Print detected text
             if text.strip():  # Check if text is not empty
                 full_text += text + " "
 
-    # print(full_text.strip())
+    print(full_text.strip())
     return full_text.strip()
 
 if __name__ == '__main__':
-    detect_and_read2('4.JPG')
+    detect_and_read2('367.JPG')
