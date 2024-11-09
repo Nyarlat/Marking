@@ -1,10 +1,12 @@
 import re
+import sqlite3
 from app.dao.db_depends import get_connection
 
 
 class Retriever:
     def __init__(self, ngrams_count=3):
-        self.articles = self._get_all_articles()
+        # self.articles = self._get_all_articles()
+        self.articles = self._get_all_articles_sqlite()
         self.ngrams_count = ngrams_count
 
     def retrieve_most_similar_article(self, recognized_article: str):
@@ -23,6 +25,17 @@ class Retriever:
                 closest_match = db_article
 
         return closest_match
+
+    @staticmethod
+    def _get_all_articles_sqlite():
+        conn = sqlite3.connect("../data/rosatom.db")
+        cursor = conn.cursor()
+        query = f"SELECT ДетальАртикул FROM components"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.close()
+        column_data = [row[0] for row in results]
+        return column_data
 
     @staticmethod
     def _get_all_articles():
