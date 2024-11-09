@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: fastapi
+    build:
+      context: .
+    #    command: uvicorn app.main:app --host 0.0.0.0
+    volumes:
+      - ./app:/src/app
+    ports:
+      - 8000:8000
+  db:
+    container_name: fastapi_pg
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
