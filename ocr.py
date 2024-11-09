@@ -13,8 +13,9 @@ def detect_and_read(image_path):
     img = cv2.imread(image_path)
 
     # Perform object detection
-    results = model.predict(img)
+    results = model.predict(img, verbose=False)
 
+    full_text = ""
     # Iterate through detected bounding boxes
     for result in results:
         for bbox in result.boxes.xyxy:  # Get bounding box coordinates
@@ -25,17 +26,13 @@ def detect_and_read(image_path):
             # Use EasyOCR to read text from the cropped image
             text_results = reader.readtext(cropped_img)
 
-            # Print detected text and bounding box coordinates
+            # Print detected text
             for (bbox, text, prob) in text_results:
-                print(f"Detected text: {text} with confidence: {prob:.2f}")
-                # Optionally draw the bounding box on the original image
-                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(img, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                full_text += text + " "
+                # print(f"Detected text: {text} with confidence: {prob:.2f}")
 
-    # Display the result image with detections
-    cv2.imshow("Detected Text", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # print(full_text.strip())
+    return full_text.strip()
 
 if __name__ == '__main__':
-    detect_and_read('367.JPG')
+    detect_and_read('4.JPG')
