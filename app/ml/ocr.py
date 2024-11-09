@@ -45,7 +45,7 @@ def detect_and_read(image_path):
                 full_text += text + " "
 
     # print(full_text.strip())
-    full_text = '"' + full_text.strip() + '"'
+    full_text = full_text.strip()
     yolo_bboxes = "\n".join(yolo_bboxes)
     return img_name, full_text, yolo_bboxes
 

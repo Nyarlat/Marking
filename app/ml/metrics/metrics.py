@@ -76,6 +76,12 @@ def calc_score(metrics):
     return score
 
 if __name__ == '__main__':
+    gt_path = 'grounded true train.csv'
+    gt = pd.read_csv(gt_path, sep=',', encoding='utf-8')
+
+    sub_path = 'submission.csv'
+    sub = pd.read_csv(sub_path, sep=',', encoding='utf-8')
+
     metrics = calc_metrics(gt, sub)
     print(metrics)
     score = calc_score(metrics)
