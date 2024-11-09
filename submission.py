@@ -1,16 +1,19 @@
 import os
 import pandas as pd
 from app.ml.ocr import detect_and_read
+from app.services.retriever import Retriever
 
 
 def get_submission_csv(folder_path, output_file='submission.csv'):
+    retriever = Retriever()
     data = []
 
     for filename in os.listdir(folder_path):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):  # Check for image files
             image_path = os.path.join(folder_path, filename)
             img_name, label_text, label = detect_and_read(image_path)
-            data.append({'image_file': img_name, 'label': label, 'label_text': label_text})
+            retrieved_label = retriever.retrieve_most_similar_article(label_text)
+            data.append({'image_file': img_name, 'label': retrieved_label, 'label_text': label_text})
 
     # Create a DataFrame from the collected data
     df = pd.DataFrame(data)
