@@ -50,5 +50,6 @@ def detect_and_read(image_path):
     return img_name, full_text, yolo_bboxes
 
 
+
 if __name__ == '__main__':
-    detect_and_read('4.JPG')
+    detect_and_read('../../4.JPG')

@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from ocr import detect_and_read
+from app.ml.ocr import detect_and_read
 
 
 def get_submission_csv(folder_path, output_file='submission.csv'):

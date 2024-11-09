@@ -5,7 +5,6 @@ services:
     container_name: fastapi
     build:
       context: .
-    #    command: uvicorn app.main:app --host 0.0.0.0
     volumes:
       - ./app:/src/app
     ports:
@@ -21,3 +20,11 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
