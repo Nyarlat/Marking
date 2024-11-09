@@ -6,7 +6,7 @@ if __name__ == '__main__':
     results = model.train(
         data='marking.yaml',
         imgsz=640,
-        epochs=30,
+        epochs=50,
         batch=8,
         name='yolov11n_marking',
         device='0'
