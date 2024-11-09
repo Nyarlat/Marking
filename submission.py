@@ -1,12 +1,12 @@
 import os
 import pandas as pd
-from app.ml.ocr import ObjectDetector
+from app.ml.ocr import TextRecognizer
 from app.services.retriever import Retriever
 
 
 def get_submission_csv(folder_path, output_file='submission.csv'):
-    text_recognizer = ObjectDetector(['en'])
-    retriever = Retriever()
+    text_recognizer = TextRecognizer(['en'])
+    retriever = Retriever(ngrams_count=2)
     data = []
 
     for filename in os.listdir(folder_path):
@@ -23,4 +23,4 @@ def get_submission_csv(folder_path, output_file='submission.csv'):
 
 if __name__ == '__main__':
     # get_submission_csv('D:\\hack_data\\train Росатом\\train\\imgs')
-    get_submission_csv('D:\\hack_data\\train Росатом\\train\\imgs', '\\app\\ml\\metrics\\submission.csv')
+    get_submission_csv('D:\\hack_data\\train Росатом\\train\\imgs', 'app\\ml\\metrics\\submission.csv')

@@ -4,7 +4,7 @@ import easyocr
 from ultralytics import YOLO
 
 
-class ObjectDetector:
+class TextRecognizer:
     def __init__(self, languages):
         # Загружаем модель YOLO один раз при инициализации класса
         self.model = YOLO('app/ml/models/best.pt')
