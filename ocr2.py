@@ -7,6 +7,8 @@ from ultralytics import YOLO
 # Load the YOLO model
 model = YOLO('best.pt')
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 def detect_and_read2(image_path):
     # Load the image
     img = cv2.imread(image_path)
@@ -18,19 +20,18 @@ def detect_and_read2(image_path):
     # Iterate through detected bounding boxes
     for result in results:
         for bbox in result.boxes.xyxy:  # Get bounding box coordinates
+
             x1, y1, x2, y2 = map(int, bbox)  # Convert to integer
             # Crop the image to the bounding box area
             cropped_img = img[y1:y2, x1:x2]
 
-            pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+            # osd_image = pytesseract.image_to_osd(cropped_img, output_type=Output.DICT,
+            #                                      config='--psm 0 -c min_characters_to_try=5')
+            #
+            # rotated_image = imutils.rotate(cropped_img, angle=osd_image["rotate"])
+            # cv2.imwrite("rotated.png", rotated_image)
 
-            osd_image = pytesseract.image_to_osd(cropped_img, output_type=Output.DICT)
-            rotated_image = imutils.rotate(cropped_img, angle=osd_image["rotate"])
-
-            # Use Tesseract to read text from the cropped image
-            # text = pytesseract.image_to_string(rotated_image, config='--psm 0 -c min_characters_to_try=5')
-            text = pytesseract.image_to_string(rotated_image, config='--dpi 300')
-            # text = pytesseract.image_to_string(rotated_image)
+            text = pytesseract.image_to_string(cropped_img)
 
             # Print detected text
             if text.strip():  # Check if text is not empty
@@ -39,5 +40,6 @@ def detect_and_read2(image_path):
     print(full_text.strip())
     return full_text.strip()
 
+
 if __name__ == '__main__':
-    detect_and_read2('367.JPG')
+    detect_and_read2('4.JPG')
