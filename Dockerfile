@@ -21,3 +21,17 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu118
 
 CMD ["python3"]
+FROM python:3.10
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH=/src
+
+WORKDIR /src
+
+RUN pip install --upgrade pip
+COPY requirements.txt /src/requirements.txt
+RUN pip install -r requirements.txt
+
+COPY .. /src/
+
+CMD python app/dao/init_db.py && python app/main.py
