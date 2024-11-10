@@ -5,3 +5,8 @@
 .runs
 /runs
 ./runs
+
+.idea
+/__pycache__/
+
+/postgres_data/
