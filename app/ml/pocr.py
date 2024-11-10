@@ -2,6 +2,7 @@ import cv2
 import os
 from ultralytics import YOLO
 from paddleocr import PaddleOCR
+import easyocr
 from app.ml.image_rotation import rotate_image, segment_number_area, get_rotation_angle
 
 
@@ -11,6 +12,8 @@ class ImageProcessor:
         self.model = YOLO(yolo_model_path)
         # Инициализируем модель OCR
         self.ocr_model = PaddleOCR(use_angle_cls=True, lang=ocr_lang, use_gpu=use_gpu)
+        # Инициализируем модель OCR easyocr для подстраховки
+        self.easyocr = easyocr.Reader(['en'])
 
     def _ocr(self, img):
         """Вспомогательный метод для распознавания текста на изображении."""
@@ -45,7 +48,7 @@ class ImageProcessor:
                 bbox_height = (y2 - y1) / height
 
                 # Добавляем в список ограничивающих прямоугольников YOLO
-                yolo_bboxes.append(f"0 {round(x_center, 6)} {round(y_center, 6)} {round(bbox_width, 6)} {round(bbox_height, 6)}\n")
+                yolo_bboxes.append(f"0 {x_center} {y_center} {bbox_width} {bbox_height}")
 
                 # Обрезаем изображение по области bounding box
                 cropped_img = img[y1:y2, x1:x2]
@@ -54,9 +57,12 @@ class ImageProcessor:
                 # angle = get_rotation_angle(mask)
                 # rotated_image = rotate_image(cropped_img, angle)
 
+
                 text = self._ocr(cropped_img)  # Распознаем текст на обрезанном изображении
+                if text is None:
+                    text = self.easyocr.readtext(cropped_img)
                 full_text += text + " "
 
         full_text = full_text.strip()
-        yolo_bboxes = "".join(yolo_bboxes)
+        yolo_bboxes = "\n".join(yolo_bboxes)
         return img_name, full_text, yolo_bboxes
