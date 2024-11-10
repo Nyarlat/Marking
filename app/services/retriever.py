@@ -1,11 +1,14 @@
 import re
-import sqlite3
+import psycopg2
 from app.dao.db_depends import get_connection
 
 
 class Retriever:
-    def __init__(self, ngrams_count=3):
-        self.articles = self._get_all_articles()
+    def __init__(self, ngrams_count=3, local_mode: bool = False):
+        if local_mode:
+            self.articles = self._get_all_articles_local()
+        else:
+            self.articles = self._get_all_articles()
         self.ngrams_count = ngrams_count
 
     def retrieve_most_similar_article(self, recognized_article: str):
@@ -26,23 +29,31 @@ class Retriever:
         return closest_match
 
     @staticmethod
-    def _get_all_articles_sqlite():
-        conn = sqlite3.connect("app/data/rosatom.db")
-        cursor = conn.cursor()
-        query = f"SELECT ДетальАртикул FROM components"
-        cursor.execute(query)
-        results = cursor.fetchall()
-        conn.close()
-        column_data = [row[0] for row in results]
-        return column_data
-
-    @staticmethod
     def _get_all_articles():
         with get_connection() as conn:
             cursor = conn.cursor()
             query = f"SELECT ДетальАртикул FROM components"
             cursor.execute(query)
             results = cursor.fetchall()
+
+        column_data = [row[0] for row in results]
+        return column_data
+
+    @staticmethod
+    def _get_all_articles_local():
+
+        conn = psycopg2.connect(
+            dbname="postgres",
+            user="postgres",
+            password="postgres",
+            host="localhost",
+            port=5432)
+
+        cursor = conn.cursor()
+        query = f"SELECT ДетальАртикул FROM components"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.close()
 
         column_data = [row[0] for row in results]
         return column_data

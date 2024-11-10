@@ -1,7 +1,8 @@
 .venv
 /venv
 ./venv
-
+.idea
+/__pycache__/
 .runs
 /runs
 ./runs
