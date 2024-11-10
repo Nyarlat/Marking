@@ -10,7 +10,7 @@ def get_submission_csv(folder_path, output_file='submission.csv'):
     data = []
 
     for filename in os.listdir(folder_path):
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg')):  # Check for image files
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.JPG')):  # Check for image files
             image_path = os.path.join(folder_path, filename)
             img_name, label_text, label = text_recognizer.detect_and_read(image_path)
             retrieved_label = retriever.retrieve_most_similar_article(label_text)
