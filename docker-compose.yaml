@@ -9,6 +9,14 @@ services:
       - ./app:/src/app
     ports:
       - 8000:8000
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
   db:
     container_name: fastapi_pg
     image: postgres:14-alpine
@@ -21,10 +29,3 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
 
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]

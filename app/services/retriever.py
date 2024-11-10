@@ -5,8 +5,7 @@ from app.dao.db_depends import get_connection
 
 class Retriever:
     def __init__(self, ngrams_count=3):
-        # self.articles = self._get_all_articles()
-        self.articles = self._get_all_articles_sqlite()
+        self.articles = self._get_all_articles()
         self.ngrams_count = ngrams_count
 
     def retrieve_most_similar_article(self, recognized_article: str):

@@ -1,8 +1,10 @@
 from app.dao.db_depends import get_connection
 from app.schemas.component import Component
 from app.services.retriever import Retriever
+from app.ml.ocr import TextRecognizer
 
 retriever = Retriever()
+recognizer = TextRecognizer(['en'])
 
 
 def get_random_row():
@@ -18,8 +20,15 @@ def get_random_row():
         return component
 
 
-def get_information_by_article(article: str):
+def process_image(image_path: str) -> Component:
+    _, recognized_text, _ = recognizer.detect_and_read(image_path=image_path)
+    if recognized_text:
+        component = get_information_by_article(article=recognized_text)
+        return component
+    return Component()
 
+
+def get_information_by_article(article: str) -> Component:
     db_article = retriever.retrieve_most_similar_article(recognized_article=article)
 
     with get_connection() as conn:
@@ -32,5 +41,3 @@ def get_information_by_article(article: str):
         data = dict(zip(fields, row))
         component = Component(**data)
         return component
-
-

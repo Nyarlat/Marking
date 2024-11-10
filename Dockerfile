@@ -9,15 +9,15 @@ RUN apt-get update && \
     python3-dev \
     git \
     curl \
-    wget && \
+    wget \
+    libgl1 \
+    libglib2.0-0 && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/apt/*
-
 
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
 COPY requirements.txt /src/requirements.txt
-
 RUN pip install --no-cache-dir -r /src/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu118
 
 COPY .. /src/
